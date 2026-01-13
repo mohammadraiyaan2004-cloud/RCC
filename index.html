@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RCC Design Validator</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #2c3e50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+    }
+
+    .green { background: #d4edda; }
+    .orange { background: #fff3cd; }
+    .red { background: #f8d7da; }
+
+    footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ✅ CONTAINER START -->
+  <div class="container">
+
+    <h1>RCC Design Input Validation Tool</h1>
+
+    <label>Exposure Condition:</label>
+    <select>
+      <option>Mild</option>
+      <option>Moderate</option>
+      <option>Severe</option>
+      <option>Very Severe</option>
+      <option>Extreme</option>
+    </select>
+
+    <label>Member Type:</label>
+    <select>
+      <option>Beam</option>
+      <option>Column</option>
+      <option>Slab</option>
+    </select>
+
+    <label>Concrete Grade:</label>
+    <select>
+      <option>M20</option>
+      <option>M25</option>
+      <option>M30</option>
+      <option>M35</option>
+      <option>M40</option>
+    </select>
+
+    <label>Bar Diameter (mm):</label>
+    <select>
+      <option>8</option>
+      <option>10</option>
+      <option>12</option>
+      <option>16</option>
+      <option>20</option>
+      <option>25</option>
+    </select>
+
+    <label>Nominal Cover (mm):</label>
+    <input type="number">
+
+    <button onclick="checkDesign()">Check Design</button>
+
+    <div id="result"></div>
+
+    <footer>
+      Design rules based on IS 456:2000 – Preliminary validation only
+    </footer>
+
+  </div>
+  <!-- ✅ CONTAINER END -->
+
+<script>
+  function checkDesign() {
+
+    const exposure = document.querySelectorAll("select")[0].value;
+    const member = document.querySelectorAll("select")[1].value;
+    const grade = document.querySelectorAll("select")[2].value;
+    const dia = parseInt(document.querySelectorAll("select")[3].value);
+
+    let errors = [];
+    let warnings = [];
+
+    const minGrade = {
+      "Mild": "M20",
+      "Moderate": "M25",
+      "Severe": "M30",
+      "Very Severe": "M35",
+      "Extreme": "M40"
+    };
+
+    if (grade < minGrade[exposure]) {
+      errors.push("Concrete grade is not adequate for selected exposure condition.");
+    }
+
+    if (member === "Slab" && dia > 12) {
+      warnings.push("Slab reinforcement diameter should not exceed 12 mm.");
+    }
+
+    if (member === "Column" && dia < 12) {
+      warnings.push("Column reinforcement diameter should not be less than 12 mm.");
+    }
+
+    let status = "DESIGN COMPLIANT";
+    let color = "green";
+
+    if (errors.length > 0) {
+      status = "DESIGN NOT COMPLIANT";
+      color = "red";
+    } els
